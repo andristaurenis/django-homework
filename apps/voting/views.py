@@ -50,7 +50,8 @@ def voteForRestaurant(req, restaurantId):
     if votesUsed >= req.user.numberOfVotes:
         return JsonResponse({"title": "No more votes.", "numberOfVotes": req.user.numberOfVotes}, status=403)
     restaurant = get_object_or_404(Restaurant, pk=restaurantId)
-    weight = Vote.WEIGHT.first if votesUsed == 0 else Vote.WEIGHT.second if votesUsed == 1 else Vote.WEIGHT.default
+    repeated = pendingChoice.vote_set.filter(user__pk=req.user.id, restaurant__pk=restaurantId).count()
+    weight = Vote.WEIGHT.first if repeated == 0 else Vote.WEIGHT.second if repeated == 1 else Vote.WEIGHT.default
     pendingChoice.vote_set.create(restaurant=restaurant, user=req.user, weight=weight)
     return JsonResponse({"votesRemaining": req.user.numberOfVotes - votesUsed - 1})
 

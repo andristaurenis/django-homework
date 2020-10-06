@@ -23,7 +23,7 @@ header {
 <html>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        // const axios = require('axios').default;
+
         const addRestaurant = () => {
             const restaurantName = document.getElementById("newName").value
             axios.post('/voting/restaurants', {restaurantName})
@@ -37,16 +37,14 @@ header {
             const restaurantId = document.getElementById("restaurantId").value
             axios.delete(`/voting/restaurants/${restaurantId}`)
         }
-        const getRestaurants = () => {
-            axios.get('/voting/restaurants').then((response) => {
-                document.getElementById("restaurantList").innerHTML = JSON.stringify(response.data, null, 2)
-            })
+        const getRestaurants = async () => {
+            const response = await axios.get('/voting/restaurants')
+            document.getElementById("restaurantList").innerHTML = JSON.stringify(response.data, null, 2)
         }
-        const getRestaurant = () => {
+        const getRestaurant = async () => {
             const restaurantId = document.getElementById("restaurantId").value
-            axios.get(`/voting/restaurants/${restaurantId}`).then((response) => {
-                document.getElementById("restaurantById").innerHTML = JSON.stringify(response.data, null, 2)
-            })
+            const response = await axios.get(`/voting/restaurants/${restaurantId}`)
+            document.getElementById("restaurantById").innerHTML = JSON.stringify(response.data, null, 2)
         }
         const vote = () => {
             const restaurantId = document.getElementById("restaurantId").value
@@ -55,10 +53,9 @@ header {
         const finishVoting = () => {
             axios.get(`/voting/endVoting`)
         }
-        const getHistory = () => {
-            axios.get('/voting/restaurantChoiceHistory').then((response) => {
-                document.getElementById("history").innerHTML = JSON.stringify(response.data, null, 2)
-            })
+        const getHistory = async () => {
+            const response = await axios.get('/voting/restaurantChoiceHistory')
+            document.getElementById("history").innerHTML = JSON.stringify(response.data, null, 2)
         }
     </script>
     <head>
@@ -70,9 +67,15 @@ header {
             <h3>This is base html - a dump of all functionality!</h3>
             <section>
                 {% if user.is_authenticated %}
+                    Logged in as {{user.username}}<br>
                     <a href="{% url 'core_logout' %}">logout</a>
                 {% else %}
-                    <a href="{% url 'core_login' %}">login</a>
+                    <h2>Login</h2>
+                      <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Login</button>
+                    </form>
                 {% endif %}
             </section>
         </header>
