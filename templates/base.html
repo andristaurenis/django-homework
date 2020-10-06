@@ -64,18 +64,19 @@ header {
     </head>
     <body>
         <header>
-            <h3>This is base html - a dump of all functionality!</h3>
+            <h2>Pēteris Ratnieks - Homework for Convious</h2>
+            <p><a href="https://github.com/andristaurenis/django-homework">Code hosted on remote git repository.</a>
+            There you can find information about the project.
+            API is not documented, but below is a dump of all functionality that exists and it should be self explanatory.
+            </p>
+            <h3>A dump of all functionality!</h3>
             <section>
                 {% if user.is_authenticated %}
                     Logged in as {{user.username}}<br>
                     <a href="{% url 'core_logout' %}">logout</a>
                 {% else %}
-                    <h2>Login</h2>
-                      <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit">Login</button>
-                    </form>
+                    {% block content %}
+                    {% endblock %}
                 {% endif %}
             </section>
         </header>

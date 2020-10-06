@@ -10,9 +10,10 @@ Usage
 
 ```bash
 python -m venv venv
+. ./venv/bin/activate
 pip install django
 git  clone https://github.com/andristaurenis/django-homework
-cd homework
+cd django-homework
 pip install -r requirements/development.txt
 python manage.py migrate
 python manage.py createsuperuser --username admin --email admin@example.com
@@ -49,35 +50,3 @@ Known bugs:
   To do this properly .env file loading has to be implemented.
 - Use of ' and " are not consistent.
   Solution: Set up stricter linter. There might be other problems of such sort.
-
-
-
-
-
-axios.post('/user', {
-    firstName: 'Fred',
-    lastName: 'Flintstone'
-  })
-
-        const axiosCookieJarSupport = require('axios-cookiejar-support').default;
-        const tough = require('tough-cookie');
-        axiosCookieJarSupport(axios);
-
-        async function login(name,pass) {
-            let cookieJar = new tough.CookieJar();
-
-            let instance = await axios.create({
-                jar:cookieJar,
-                withCredentials: true,
-                httpsAgent: new https.Agent({ rejectUnauthorized: false, requestCert: true, keepAlive: true})
-            });
-            let res = await instance.get('https://172.16.220.133/api/config');
-            console.log(res.data.csrf_token);
-
-            instance.defaults.headers['x-csrf-token'] = res.data.csrf_token;
-
-            res = await instance.post('https://172.16.220.133/login',{username:name,password:pass});
-
-            console.log(res.statusCode);
-            console.log(res);
-        }
