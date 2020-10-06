@@ -30,12 +30,11 @@ class RestaurantChoiceHistory(models.Model):
     def finalizeRestaurantChoice():
         pendingChoice = RestaurantChoiceHistory.getPendingChoice()
         weights = (Restaurant.objects.filter(deletedAt__isnull=True, vote__restaurantChoiceHistory__pk=1)
-                   .annotate(totalWeight=Sum("vote__weight"), count=Count("vote__pk"))
+                   .annotate(totalWeight=Sum("vote__weight"), count=Count("vote__user_id", distinct=True))
                    .order_by("-totalWeight", "-count"))
         if not weights:
             raise ValidationError("No votes have been submitted.")
-        maxVoted = weights[0]
-        newHist = RestaurantChoiceHistory.objects.create(restaurant=maxVoted.restaurant)
+        newHist = RestaurantChoiceHistory.objects.create(restaurant=weights[0])
         allVotes = pendingChoice.vote_set.all()
         for vote in allVotes:
             vote.restaurantChoiceHistory_id = newHist.id

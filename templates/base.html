@@ -25,7 +25,7 @@ header {
     <script>
 
         const addRestaurant = () => {
-            const restaurantName = document.getElementById("newName").value
+            const restaurantName = document.getElementById("restaurantName").value
             axios.post('/voting/restaurants', {restaurantName})
         }
         const putRestaurant = () => {
