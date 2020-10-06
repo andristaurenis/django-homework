@@ -1,0 +1,117 @@
+<DOCTYPE html>
+<style>
+body {
+  background-color: linen;
+}
+
+section {
+  color: maroon;
+  margin: 20px;
+  padding: 20px;
+  background-color: gold;
+}
+section section {
+  color: maroon;
+  margin: 20px;
+  padding: 5px;
+  background-color: yellow;
+}
+header {
+    padding: 20px;
+}
+</style>
+<html>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        // const axios = require('axios').default;
+        const addRestaurant = () => {
+            const restaurantName = document.getElementById("newName").value
+            axios.post('/voting/restaurants', {restaurantName})
+        }
+        const putRestaurant = () => {
+            const restaurantId = document.getElementById("restaurantId").value
+            const newName = document.getElementById("newName").value
+            axios.put(`/voting/restaurants/${restaurantId}`, {newName})
+        }
+        const deleteRestaurant = () => {
+            const restaurantId = document.getElementById("restaurantId").value
+            axios.delete(`/voting/restaurants/${restaurantId}`)
+        }
+        const getRestaurants = () => {
+            axios.get('/voting/restaurants').then((response) => {
+                document.getElementById("restaurantList").innerHTML = JSON.stringify(response.data, null, 2)
+            })
+        }
+        const getRestaurant = () => {
+            const restaurantId = document.getElementById("restaurantId").value
+            axios.get(`/voting/restaurants/${restaurantId}`).then((response) => {
+                document.getElementById("restaurantById").innerHTML = JSON.stringify(response.data, null, 2)
+            })
+        }
+        const vote = () => {
+            const restaurantId = document.getElementById("restaurantId").value
+            axios.get(`/voting/vote/${restaurantId}`)
+        }
+        const finishVoting = () => {
+            axios.get(`/voting/endVoting`)
+        }
+        const getHistory = () => {
+            axios.get('/voting/restaurantChoiceHistory').then((response) => {
+                document.getElementById("history").innerHTML = JSON.stringify(response.data, null, 2)
+            })
+        }
+    </script>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}base.html | django-project-skeleton{% endblock %}</title>
+    </head>
+    <body>
+        <header>
+            <h3>This is base html - a dump of all functionality!</h3>
+            <section>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'core_logout' %}">logout</a>
+                {% else %}
+                    <a href="{% url 'core_login' %}">login</a>
+                {% endif %}
+            </section>
+        </header>
+        <main>
+            <section>
+                <pre><code id='restaurantList'></code></pre>
+                <button id='getRestaurants' onclick="getRestaurants()">Refresh Restaurant List</button>
+            </section>
+            <section>
+                <button id='addRestaurant' onclick="addRestaurant()">Create Restaurant</button>
+                Restaurant name: <input type="text" id="restaurantName" name="restaurantName">
+            </section>
+            <section>
+                Restaurant ID: <input type="text" id="restaurantId" name="restaurantId">
+                <section>
+                    <pre><code id='restaurantById'></code></pre>
+                    <button id='getRestaurant' onclick="getRestaurant()">Get Restaurant</button>
+                </section>
+                <section>
+                    <button id='putRestaurant' onclick="putRestaurant()">Edit Restaurant</button>
+                    New name for restaurant: <input type="text" id="newName" name="newName">
+                </section>
+                <section>
+                    <button id='deleteRestaurant' onclick="deleteRestaurant()">Delete Restaurant</button>
+                </section>
+                <section>
+                    <button id='vote' onclick="vote()">Vote For Restaurant</button>
+                </section>
+            </section>
+            <section>
+                <button id='finishVoting' onclick="finishVoting()">Finish Voting</button>
+            </section>
+            <section>
+                <pre><code id='history'></code></pre>
+                <button id='getHistory' onclick="getHistory()">Get Voting History</button>
+            </section>
+        </main>
+        <footer>
+            <a href="https://github.com/Mischback/django-project-skeleton">django-project-skeleton</a>
+        </footer>
+    </body>
+</html>
